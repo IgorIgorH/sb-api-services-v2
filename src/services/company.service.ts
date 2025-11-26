@@ -29,22 +29,35 @@ const encryptCompanyData = (companyData: ICompany) => {
 
 const decryptCompanyData = (companyData: any) => {
   companyData.api_keys = companyData.api_keys.map((apiKey: IApiKey) => {
-    return {
-      key: apiKey.key,
-      value: decryptData({
-        value: apiKey.value,
-        iv: apiKey.iv || ' ',
-        tag: apiKey.tag || ' ',
-      }),
-    };
+    try {
+      return {
+        key: apiKey.key,
+        value: decryptData({
+          value: apiKey.value,
+          iv: apiKey.iv || ' ',
+          tag: apiKey.tag || ' ',
+        }),
+      };
+    } catch (decryptError) {
+      console.warn(`⚠️  [COMPANY SERVICE] Could not decrypt API key '${apiKey.key}' (likely different ENCRYPTION_KEY). Using placeholder.`);
+      return {
+        key: apiKey.key,
+        value: `encrypted_${apiKey.key}`, // Placeholder value
+      };
+    }
   });
 
   if (companyData.token) {
-    companyData.token.value = decryptData({
-      value: companyData.token.value,
-      iv: companyData.token.iv || ' ',
-      tag: companyData.token.tag || ' ',
-    });
+    try {
+      companyData.token.value = decryptData({
+        value: companyData.token.value,
+        iv: companyData.token.iv || ' ',
+        tag: companyData.token.tag || ' ',
+      });
+    } catch (decryptError) {
+      console.warn('⚠️  [COMPANY SERVICE] Could not decrypt company token (likely different ENCRYPTION_KEY). Using placeholder.');
+      companyData.token.value = 'encrypted_token_placeholder';
+    }
   }
 };
 
@@ -109,6 +122,16 @@ export const getCompany = async (id: string) => {
     }
     const companyObj = company.toObject();
     decryptCompanyData(companyObj);
+
+    // Ensure token field exists for frontend compatibility
+    if (!companyObj.token) {
+      companyObj.token = {
+        value: 'placeholder_token',
+        iv: '',
+        tag: ''
+      };
+    }
+
     return companyObj;
   } catch (error) {
     console.error('Error retrieving company:', error);
@@ -120,10 +143,33 @@ export const getCompanies = async (companyId: Types.ObjectId | null): Promise<an
   try {
     if (companyId === null) {
       const companies = await Company.find();
-      return companies.map((company) => company.toObject());
+      return companies.map((company) => {
+        const companyObj = company.toObject();
+        decryptCompanyData(companyObj);
+        // Ensure token field exists for frontend compatibility
+        if (!companyObj.token) {
+          companyObj.token = {
+            value: 'placeholder_token',
+            iv: '',
+            tag: ''
+          };
+        }
+        return companyObj;
+      });
     } else {
       const company = await Company.findById(companyId);
-      return company ? [company.toObject()] : [];
+      if (!company) return [];
+      const companyObj = company.toObject();
+      decryptCompanyData(companyObj);
+      // Ensure token field exists for frontend compatibility
+      if (!companyObj.token) {
+        companyObj.token = {
+          value: 'placeholder_token',
+          iv: '',
+          tag: ''
+        };
+      }
+      return [companyObj];
     }
   } catch (error) {
     console.error('Error retrieving companies:', error);

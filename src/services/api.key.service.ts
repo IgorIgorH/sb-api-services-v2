@@ -22,7 +22,15 @@ export type ApiKeyType =
   | 'executor_agent_token'
   | 'jira_api_token'
   | 'jira_domain'
-  | 'jira_email';
+  | 'jira_email'
+  | 'google_client_id'
+  | 'google_client_secret'
+  | 'google_refresh_token'
+  | 'imap_email'
+  | 'imap_password'
+  | 'imap_host'
+  | 'imap_port'
+  | 'imap_tls';
 
 // Initialize cache with a 15-minute TTL (time to live)
 const apiKeyCache = new NodeCache({ stdTTL: 900 });
@@ -52,11 +60,25 @@ export const getApiKey = async (
     return null;
   }
 
-  const decryptedKey = decryptData({
-    value: apiKey.value,
-    iv: apiKey.iv,
-    tag: apiKey.tag,
-  });
+  let decryptedKey: string;
+  try {
+    decryptedKey = decryptData({
+      value: apiKey.value,
+      iv: apiKey.iv,
+      tag: apiKey.tag,
+    });
+  } catch (decryptError) {
+    // Try to fallback to environment variable
+    const envKeyName = keyType.toUpperCase().replace(/_API_KEY$/, '_API_KEY');
+    const envKey = process.env[envKeyName];
+    if (envKey) {
+      console.warn(`⚠️  [API KEY SERVICE] Could not decrypt API key '${keyType}' for company ${companyId}. Using environment variable ${envKeyName}.`);
+      apiKeyCache.set(cacheKey, envKey);
+      return envKey;
+    }
+    console.warn(`⚠️  [API KEY SERVICE] Could not decrypt API key '${keyType}' for company ${companyId} and no environment variable found. Using null.`);
+    return null;
+  }
 
   // Store in cache
   apiKeyCache.set(cacheKey, decryptedKey);
@@ -109,12 +131,24 @@ export const refreshApiKeyCache = async (companyId: string): Promise<void> => {
 
   for (const apiKey of company.api_keys) {
     const keyType = apiKey.key as ApiKeyType;
-    const decryptedKey = decryptData({
-      value: apiKey.value,
-      iv: apiKey.iv,
-      tag: apiKey.tag,
-    });
-    updateApiKeyCache(companyId, keyType, decryptedKey);
+    try {
+      const decryptedKey = decryptData({
+        value: apiKey.value,
+        iv: apiKey.iv,
+        tag: apiKey.tag,
+      });
+      updateApiKeyCache(companyId, keyType, decryptedKey);
+    } catch (decryptError) {
+      // Try to fallback to environment variable
+      const envKeyName = keyType.toUpperCase().replace(/_API_KEY$/, '_API_KEY');
+      const envKey = process.env[envKeyName];
+      if (envKey) {
+        console.warn(`⚠️  [API KEY SERVICE] Could not decrypt API key '${keyType}' for company ${companyId} during cache refresh. Using environment variable ${envKeyName}.`);
+        updateApiKeyCache(companyId, keyType, envKey);
+      } else {
+        console.warn(`⚠️  [API KEY SERVICE] Could not decrypt API key '${keyType}' for company ${companyId} during cache refresh and no environment variable found. Skipping.`);
+      }
+    }
   }
 };
 

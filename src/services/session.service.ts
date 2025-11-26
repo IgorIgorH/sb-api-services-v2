@@ -142,12 +142,24 @@ export const getSessionOrCreate = async (
   }
 
   if (!assistantToUseId) {
+    console.log(`🔍 [SESSION DEBUG] Searching for assistant with companyId: ${companyId} (type: ${typeof companyId})`);
     const defaultAssistant = await Assistant.findOne({ companyId });
+    console.log(`🔍 [SESSION DEBUG] Query result:`, defaultAssistant ? `FOUND ${defaultAssistant.name}` : 'NOT FOUND');
     if (!defaultAssistant) {
-      console.error(`No default assistant available for companyId: ${companyId}`);
-      throw new Error('No default assistant available for this company');
+      // Try with ObjectId conversion
+      const objectIdCompanyId = new mongoose.Types.ObjectId(companyId);
+      console.log(`🔍 [SESSION DEBUG] Retry with ObjectId: ${objectIdCompanyId}`);
+      const retryAssistant = await Assistant.findOne({ companyId: objectIdCompanyId });
+      console.log(`🔍 [SESSION DEBUG] Retry result:`, retryAssistant ? `FOUND ${retryAssistant.name}` : 'NOT FOUND');
+      if (retryAssistant) {
+        assistantToUseId = retryAssistant._id;
+      } else {
+        console.error(`No default assistant available for companyId: ${companyId}`);
+        throw new Error('No default assistant available for this company');
+      }
+    } else {
+      assistantToUseId = defaultAssistant._id;
     }
-    assistantToUseId = defaultAssistant._id;
   }
 
   // Generate a unique ID for threadId instead of getting it from OpenAI

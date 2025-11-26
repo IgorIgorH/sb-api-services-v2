@@ -16,6 +16,9 @@ export const verifyTokenMiddleware = async (
   next: NextFunction
 ) => {
   try {
+    console.log('[MIDDLEWARE DEBUG] Request URL:', req.url);
+    console.log('[MIDDLEWARE DEBUG] Request method:', req.method);
+    console.log('[MIDDLEWARE DEBUG] All headers:', JSON.stringify(req.headers, null, 2));
     const token = extractTokenFromHeader(req.headers.authorization);
     const { user, company } = await verifyToken(token);
 

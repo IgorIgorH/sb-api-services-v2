@@ -9,7 +9,7 @@ import { getMessagesBySessionId } from '../../services/message.service';
 import { createFunctionFactory } from '../../integrations/actions/loaders';
 import { executeFunctionCall } from '../../integrations/actions/executors';
 import { FunctionCall } from '../../integrations/actions/types';
-import { getApiKey } from '../api.key.service'; 
+import { getApiKey } from '../api.key.service';
 import { fetchGcpFileContent } from '../../integrations/gcp_file_fetcher/gcp_file_fetcher.service';
 import axios from 'axios'; // Added axios for fetching image data
 
@@ -275,8 +275,11 @@ export const handleSessionMessage = async (
   } else {
     toolsForSdk = {};
     const functionFactory = await createFunctionFactory(actionContext, assistant.allowedActions);
+    console.log(`[Tool Creation] Created function factory with actions:`, Object.keys(functionFactory));
+    console.log(`[Tool Creation] Assistant allowedActions:`, assistant.allowedActions);
     for (const funcName in functionFactory) {
       const funcDef = functionFactory[funcName];
+      console.log(`[Tool Creation] Processing function: ${funcName}`);
       const zodShape: Record<string, ZodTypeAny> = {};
     let saneRequiredParams: string[] = [];
 
@@ -316,24 +319,35 @@ export const handleSessionMessage = async (
     const currentFuncName = funcName;
     
     let executeFunc = async (args: any) => {
-      console.log(`[Tool Execution] Function ${currentFuncName} called with sessionId from closure: ${sessionId}`);
+      console.log(`\n🔧 [Tool Execution] ===== TOOL CALLED: ${currentFuncName} =====`);
+      console.log(`🔧 [Tool Execution] Arguments:`, JSON.stringify(args, null, 2));
+      console.log(`🔧 [Tool Execution] SessionId from closure: ${sessionId}`);
+
       const currentSession = await Session.findById(sessionId);
       if (!currentSession) {
         throw new Error('Session not found during tool execution');
       }
-      console.log(`[Tool Execution] Retrieved current session ID: ${currentSession._id.toString()}, company ID: ${currentSession.companyId.toString()}`);
-      
+      console.log(`🔧 [Tool Execution] Session ID: ${currentSession._id.toString()}, Company ID: ${currentSession.companyId.toString()}`);
+
       const functionCallPayload: FunctionCall = { function: { name: currentFuncName, arguments: JSON.stringify(args) } };
+      console.log(`🔧 [Tool Execution] Calling executeFunctionCall with payload:`, functionCallPayload);
+
       const { result, error } = await executeFunctionCall(
-        functionCallPayload, 
-        currentSession._id.toString(), 
-        currentSession.companyId.toString(), 
+        functionCallPayload,
+        currentSession._id.toString(),
+        currentSession.companyId.toString(),
         assistant.allowedActions
       );
+
       if (error) {
-        console.error(`Error in tool ${currentFuncName} execution:`, error);
+        console.error(`❌ [Tool Execution] Error in tool ${currentFuncName}:`, error);
         throw new Error(typeof error === 'string' ? error : (error as any)?.message || 'Tool execution failed');
       }
+
+      console.log(`✅ [Tool Execution] Tool ${currentFuncName} completed successfully`);
+      console.log(`✅ [Tool Execution] Result:`, JSON.stringify(result, null, 2));
+      console.log(`✅ [Tool Execution] ===== END TOOL: ${currentFuncName} =====\n`);
+
       return result;
     };
     
@@ -352,9 +366,10 @@ export const handleSessionMessage = async (
         );
         if (error) throw new Error(typeof error === 'string' ? error : (error as any)?.message || 'Tool execution failed');
         if (Array.isArray(rawResult)) return rawResult.map((ticket: any) => ({ key: ticket.key, summary: ticket.fields?.summary, status: ticket.fields?.status?.name }));
-        return rawResult; 
+        return rawResult;
       };
     }
+      console.log(`🔧 [Tool Creation] Registering tool: ${funcName}`);
       toolsForSdk[funcName] = tool({ description: funcDef.description, parameters: zodSchema, execute: executeFunc });
     }
     toolsCache.set(cacheKey, toolsForSdk);
@@ -459,6 +474,7 @@ export const handleSessionMessage = async (
     }
     // No separate experimental_attachments or attachments field needed here if images are part of CoreMessage.content
     console.log('Calling streamText. Multimodal content is part of the messages array.');
+
     const streamResult = await streamText(streamCallOptions);
       
       (async () => {

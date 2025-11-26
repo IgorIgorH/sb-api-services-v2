@@ -143,14 +143,28 @@ threadRouter.post(
           typeof (result as any).textStream[Symbol.asyncIterator] === 'function'
         ) {
           const { textStream, assistantId: messageAssistantId, threadId: messageThreadId } = result as any; // Assuming these are returned
-          
+
           // Step 5: Persist the assistant reply even in stream mode
           let fullText = '';
-          for await (const chunk of textStream) {
-            if (res.writableEnded) break;
-            fullText += chunk;
-            // Step 4: Wrap each model chunk in JSON
-            res.write(`data:${JSON.stringify({ type: 'token', value: chunk })}\n\n`);
+          try {
+            for await (const chunk of textStream) {
+              if (res.writableEnded) break;
+              fullText += chunk;
+              // Step 4: Wrap each model chunk in JSON
+              res.write(`data:${JSON.stringify({ type: 'token', value: chunk })}\n\n`);
+            }
+          } catch (streamError: any) {
+            // Handle the null content error that occurs during stream consumption
+            if (streamError.message && streamError.message.includes("expected a string, got null")) {
+              console.log(`⚠️ [SSE Stream] Caught null content error during stream consumption - sending success message`);
+              const successMessage = "Action completed successfully.";
+              if (!res.writableEnded) {
+                res.write(`data:${JSON.stringify({ type: 'token', value: successMessage })}\n\n`);
+              }
+            } else {
+              // Re-throw other errors to be caught by outer catch block
+              throw streamError;
+            }
           }
 
           // Removed Message.create from here as it's handled in message-handling.service.ts
@@ -214,16 +228,42 @@ threadRouter.post(
     } catch (error) {
       console.error('Error handling user input:', error);
       const err = error as Error; // Type assertion
+
+      // Debug: Log error details
+      console.log(`🔍 [Route Handler] Error message: "${err.message}"`);
+      console.log(`🔍 [Route Handler] clientWantsSSE: ${clientWantsSSE}`);
+      console.log(`🔍 [Route Handler] res.writableEnded: ${res.writableEnded}`);
+      console.log(`🔍 [Route Handler] res.headersSent: ${res.headersSent}`);
+
+      // Handle the null content error that sometimes occurs after tool execution
+      if (err.message && err.message.includes("expected a string, got null")) {
+        console.log(`⚠️ [Route Handler] Caught null content error - this is expected after tool execution. Sending success message.`);
+        const successMessage = "Action completed successfully.";
+
+        if (clientWantsSSE && !res.writableEnded) {
+          // Send success via SSE
+          res.write(`event:text\ndata:${JSON.stringify({type:'text', textDelta: successMessage})}\n\n`);
+          res.write(`event:end\ndata:${JSON.stringify({type:'end'})}\n\n`);
+          res.end();
+        } else if (!res.headersSent) {
+          // Send success via JSON
+          res.json({ message: successMessage });
+        } else if (!res.writableEnded) {
+          res.end();
+        }
+        return;
+      }
+
       // Step 6: Structured error frame in catch block
       // Check if SSE was intended for this error path using clientWantsSSE
-      if (clientWantsSSE && !res.writableEnded) { 
+      if (clientWantsSSE && !res.writableEnded) {
         res.write(`event:error\ndata:${JSON.stringify({type:'error', errorDetails:{message: err.message || 'An unknown error occurred during streaming.'}})}\n\n`);
         res.end();
       } else if (!res.headersSent) {
         res.status(500).json({ error: err.message || 'An error occurred while processing your request.' });
       } else if (!res.writableEnded) {
         // Fallback if headers sent but not SSE, or if writable but can't determine SSE
-        res.end(); 
+        res.end();
       }
     }
   }

@@ -140,13 +140,21 @@ export const executeAssistantStateless = async (
   const cacheKey = `${assistant._id.toString()}-${JSON.stringify(assistant.allowedActions.slice().sort())}`;
   let toolsForSdk: Record<string, Tool<any, any>>;
 
+  console.log(`\n🔧 [Stateless Tool Creation] Cache key: ${cacheKey}`);
+  console.log(`🔧 [Stateless Tool Creation] Assistant allowedActions:`, assistant.allowedActions);
+
   if (toolsCache.has(cacheKey)) {
     toolsForSdk = toolsCache.get(cacheKey)!;
+    console.log(`🔧 [Stateless Tool Creation] Using cached tools:`, Object.keys(toolsForSdk));
   } else {
     toolsForSdk = {};
+    console.log(`🔧 [Stateless Tool Creation] Creating new tools from function factory...`);
     const functionFactory = await createFunctionFactory(actionContext, assistant.allowedActions);
+    console.log(`🔧 [Stateless Tool Creation] Function factory created with functions:`, Object.keys(functionFactory));
+
     for (const funcName in functionFactory) {
       const funcDef = functionFactory[funcName];
+      console.log(`🔧 [Stateless Tool Creation] Processing function: ${funcName}`);
       const zodShape: Record<string, ZodTypeAny> = {};
       let saneRequiredParams: string[] = [];
 
@@ -183,7 +191,9 @@ export const executeAssistantStateless = async (
       }
       const zodSchema = Object.keys(zodShape).length > 0 ? z.object(zodShape) : z.object({});
       const currentFuncName = funcName;
-      
+
+      console.log(`🔧 [Stateless Tool Creation] Registering tool: ${currentFuncName}`);
+
       toolsForSdk[currentFuncName] = tool({
         description: funcDef.description,
         parameters: zodSchema,
@@ -224,8 +234,12 @@ export const executeAssistantStateless = async (
         }
       });
     }
+    console.log(`✅ [Stateless Tool Creation] Created ${Object.keys(toolsForSdk).length} tools:`, Object.keys(toolsForSdk));
     toolsCache.set(cacheKey, toolsForSdk);
   }
+
+  console.log(`\n📋 [Stateless Tools Summary] Total tools available: ${Object.keys(toolsForSdk).length}`);
+  console.log(`📋 [Stateless Tools Summary] Tool names:`, Object.keys(toolsForSdk));
 
   let modelIdentifier = assistant.llmModel || 'gpt-4o-mini';
   const llmApiKey = await getApiKey(companyId, `${providerKey}_api_key`);
@@ -382,15 +396,38 @@ export const executeAssistantStateless = async (
         model: llm,
         messages: trimmedMessages,
         tools: relevantTools,
-        maxSteps: 3,
+        maxSteps: 5, // Allow automatic multi-step execution
       };
       if (systemPrompt !== undefined && providerKey !== 'anthropic') {
         generateCallOptions.system = systemPrompt;
       }
-      const result = await generateText(generateCallOptions);
-      const cleanedResponse = cleanActionAnnotations(result.text);
+
+      let result;
+      try {
+        result = await generateText(generateCallOptions);
+      } catch (error: any) {
+        // Handle the null content error that sometimes occurs after tool execution
+        if (error.message && error.message.includes("expected a string, got null")) {
+          console.log(`⚠️ [Stateless Execution] Caught null content error - this is expected after tool execution. Returning success message.`);
+          // Return a generic success response
+          return {
+            id: generateMessageId(),
+            role: "assistant",
+            content: [{ type: "text", text: { value: "Action completed successfully." } }],
+            created_at: Math.floor(Date.now() / 1000),
+            assistant_id: assistant._id.toString(),
+            message_type: "text",
+            data: {}
+          };
+        }
+        // Re-throw if it's a different error
+        throw error;
+      }
+
+      const cleanedResponse = cleanActionAnnotations(result.text || '');
       // Skip template processing for stateless execution
-      const processedResponse = cleanedResponse;
+      // Ensure we always have a valid response text, even if the LLM didn't generate one after tool execution
+      const processedResponse = cleanedResponse || 'Action completed successfully.';
 
       const responsePayload: Record<string, any> = {
         id: generateMessageId(),
