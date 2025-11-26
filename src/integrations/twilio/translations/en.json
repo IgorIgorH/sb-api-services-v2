@@ -1,0 +1,41 @@
+{
+  "serviceName": "Twilio Integration",
+  "sendSMS": {
+    "actionTitle": "Send SMS",
+    "description": "Send an SMS message to a phone number using Twilio",
+    "parameters": {
+      "to": "Recipient phone number in E.164 format (e.g., +1234567890)",
+      "message": "The SMS message content to send"
+    }
+  },
+  "getSMSHistory": {
+    "actionTitle": "Get SMS History",
+    "description": "Get recent SMS message history from Twilio",
+    "parameters": {
+      "limit": "Maximum number of messages to retrieve (default: 20, max: 50)"
+    }
+  },
+  "makeCall": {
+    "actionTitle": "Make Voice Call",
+    "description": "Make a voice call using Twilio with TwiML instructions",
+    "parameters": {
+      "to": "Recipient phone number in E.164 format (e.g., +1234567890)",
+      "twimlUrl": "URL pointing to TwiML instructions for the call"
+    }
+  },
+  "getCallLogs": {
+    "actionTitle": "Get Call Logs",
+    "description": "Get recent voice call logs from Twilio with status and duration",
+    "parameters": {
+      "limit": "Maximum number of call logs to retrieve (default: 20, max: 50)"
+    }
+  },
+  "sendWhatsApp": {
+    "actionTitle": "Send WhatsApp Message",
+    "description": "Send a WhatsApp message using Twilio WhatsApp Business API",
+    "parameters": {
+      "to": "Recipient WhatsApp number in E.164 format (e.g., +1234567890)",
+      "message": "The WhatsApp message content to send"
+    }
+  }
+}

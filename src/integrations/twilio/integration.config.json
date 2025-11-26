@@ -1,0 +1,7 @@
+{
+  "name": "twilio",
+  "icon": "phone",
+  "apiKeyName": "twilio_account_sid",
+  "actionCreator": "createTwilioActions",
+  "actionsFile": "twilio.actions.ts"
+}

@@ -10,6 +10,8 @@ import mongoose from 'mongoose'; // Added for ObjectId generation
 import { file } from "googleapis/build/src/apis/file";
 import { transcribeAudioWhisper } from "../../services/speech.recognition.service";
 import { handleSessionMessage } from "../../services/assistant.service";
+import { hasAudioMedia, getAudioMediaUrls, downloadTwilioMedia } from "../../services/twilio/media.service";
+import { processWhatsAppAudioMessage } from "../../services/whatsapp-jira-bridge.service";
 
 const twilioClient = new Twilio(
   process.env.TWILIO_ACCOUNT_SID,
@@ -69,6 +71,75 @@ twilioMessagingRouter.post("/whatsapp/reply", async (req, res) => {
   // print received message
   console.log(req.body);
 
+  // ===== AUDIO MESSAGE HANDLING (WhatsApp-Jira Bridge) =====
+  if (hasAudioMedia(req.body)) {
+    console.log(`🎤 [Twilio WhatsApp] Audio message detected!`);
+
+    try {
+      const audioUrls = getAudioMediaUrls(req.body);
+      console.log(`📎 [Twilio WhatsApp] Found ${audioUrls.length} audio file(s)`);
+
+      // Process first audio file (usually only one per message)
+      if (audioUrls.length > 0) {
+        const audioUrl = audioUrls[0];
+
+        // Prepare metadata
+        const metadata = {
+          sender: From,
+          senderName: req.body.ProfileName || From,
+          groupName: req.body.GroupName, // Only present for group messages
+          groupId: req.body.GroupId,
+          audioUrl: audioUrl,
+          timestamp: new Date(),
+          messageId: req.body.MessageSid || req.body.SmsMessageSid
+        };
+
+        console.log(`🔄 [Twilio WhatsApp] Processing audio message...`);
+        console.log(`   From: ${metadata.senderName}`);
+        console.log(`   Group: ${metadata.groupName || 'Direct Message'}`);
+
+        // Process through WhatsApp-Jira Bridge
+        const result = await processWhatsAppAudioMessage(
+          audioUrl,
+          metadata,
+          assistant.companyId.toString()
+        );
+
+        // Send confirmation back to WhatsApp
+        let confirmationMessage: string;
+
+        if (result.success) {
+          confirmationMessage = result.summary ||
+            `🎤 Audio processed!\n✅ Created ${result.tasksCreated || 0} Jira task(s)`;
+        } else {
+          confirmationMessage = `❌ Failed to process audio: ${result.error || 'Unknown error'}`;
+        }
+
+        await twilioClient.messages.create({
+          body: confirmationMessage,
+          from: `whatsapp:${twilioPhoneNumber}`,
+          to: From
+        });
+
+        console.log(`✅ [Twilio WhatsApp] Audio message processed and confirmation sent`);
+
+        return res.status(200).send(); // Acknowledge webhook
+      }
+    } catch (error: any) {
+      console.error(`❌ [Twilio WhatsApp] Error processing audio:`, error);
+
+      // Send error message to user
+      await twilioClient.messages.create({
+        body: `⚠️ Error processing audio message: ${error.message}`,
+        from: `whatsapp:${twilioPhoneNumber}`,
+        to: From
+      });
+
+      return res.status(200).send(); // Still acknowledge webhook
+    }
+  }
+
+  // ===== TEXT MESSAGE HANDLING (Regular chat) =====
   // TODO: Determine appropriate ChannelType for Twilio WhatsApp. Using WEB as placeholder.
   // Consider ChannelType.TELEGRAM if WhatsApp is handled similarly, or add ChannelType.WHATSAPP.
   const response = await handleSessionMessage(Body, session.id, ChannelType.WEB);

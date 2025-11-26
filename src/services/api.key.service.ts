@@ -10,6 +10,9 @@ export type ApiKeyType =
   | 'google_api_key'
   | 'anthropic_api_key' // Added anthropic_api_key
   | 'twilio_api_key'
+  | 'twilio_account_sid' // Added for Twilio integration
+  | 'twilio_auth_token' // Added for Twilio integration
+  | 'twilio_phone_number' // Added for Twilio integration
   | 'jsonbin_api_key'
   | 'getimg_api_key'
   | 'perplexity_api_key'
@@ -23,6 +26,7 @@ export type ApiKeyType =
   | 'jira_api_token'
   | 'jira_domain'
   | 'jira_email'
+  | 'jira_project_key' // Added for WhatsApp-Jira bridge
   | 'google_client_id'
   | 'google_client_secret'
   | 'google_refresh_token'

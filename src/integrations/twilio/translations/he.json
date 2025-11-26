@@ -1,0 +1,41 @@
+{
+  "serviceName": "אינטגרציית Twilio",
+  "sendSMS": {
+    "actionTitle": "שלח SMS",
+    "description": "שלח הודעת SMS למספר טלפון באמצעות Twilio",
+    "parameters": {
+      "to": "מספר טלפון נמען בפורמט E.164 (לדוגמה, +1234567890)",
+      "message": "תוכן הודעת ה-SMS לשליחה"
+    }
+  },
+  "getSMSHistory": {
+    "actionTitle": "קבל היסטוריית SMS",
+    "description": "קבל היסטוריית הודעות SMS אחרונות מ-Twilio",
+    "parameters": {
+      "limit": "מספר מקסימלי של הודעות לאחזור (ברירת מחדל: 20, מקסימום: 50)"
+    }
+  },
+  "makeCall": {
+    "actionTitle": "בצע שיחת קול",
+    "description": "בצע שיחת קול באמצעות Twilio עם הוראות TwiML",
+    "parameters": {
+      "to": "מספר טלפון נמען בפורמט E.164 (לדוגמה, +1234567890)",
+      "twimlUrl": "כתובת URL המצביעה על הוראות TwiML לשיחה"
+    }
+  },
+  "getCallLogs": {
+    "actionTitle": "קבל יומני שיחות",
+    "description": "קבל יומני שיחות קול אחרונות מ-Twilio עם סטטוס ומשך זמן",
+    "parameters": {
+      "limit": "מספר מקסימלי של יומני שיחות לאחזור (ברירת מחדל: 20, מקסימום: 50)"
+    }
+  },
+  "sendWhatsApp": {
+    "actionTitle": "שלח הודעת WhatsApp",
+    "description": "שלח הודעת WhatsApp באמצעות Twilio WhatsApp Business API",
+    "parameters": {
+      "to": "מספר WhatsApp של הנמען בפורמט E.164 (לדוגמה, +1234567890)",
+      "message": "תוכן הודעת ה-WhatsApp לשליחה"
+    }
+  }
+}
