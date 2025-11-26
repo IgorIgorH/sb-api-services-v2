@@ -1,0 +1,240 @@
+{
+  "serviceName": "אינטגרציית Gmail",
+  "getInbox": {
+    "actionTitle": "קבלת תיבת דואר נכנס Gmail",
+    "description": "מאחזר הודעות דוא\"ל אחרונות מתיבת הדואר הנכנס שלך ב-Gmail",
+    "parameters": {
+      "limit": "מספר מקסימלי של הודעות דוא\"ל לאחזר"
+    }
+  },
+  "readEmail": {
+    "actionTitle": "קריאת הודעת דוא\"ל Gmail",
+    "description": "מאחזר את התוכן המלא והפרטים של הודעת דוא\"ל ספציפית",
+    "parameters": {
+      "emailId": "מזהה ההודעה לקריאה"
+    }
+  },
+  "searchEmails": {
+    "actionTitle": "חיפוש הודעות דוא\"ל Gmail",
+    "description": "חיפוש הודעות דוא\"ל באמצעות תחביר שאילתות Gmail (למשל, 'from:user@example.com', 'subject:meeting', 'is:unread')",
+    "parameters": {
+      "searchQuery": "שאילתת חיפוש Gmail (תומך בתחביר חיפוש מלא של Gmail)",
+      "limit": "מספר מקסימלי של הודעות דוא\"ל להחזרה"
+    }
+  },
+  "sendEmail": {
+    "actionTitle": "שליחת דוא\"ל",
+    "description": "שלח הודעת דוא\"ל חדשה דרך Gmail עם תמיכה בתוכן HTML, CC, BCC ומספר נמענים",
+    "parameters": {
+      "to": "כתובת(כתובות) דוא\"ל של הנמען, מופרדות בפסיקים עבור מספר נמענים",
+      "subject": "שורת נושא הדוא\"ל",
+      "body": "תוכן גוף הדוא\"ל (טקסט רגיל או HTML)",
+      "cc": "נמעני CC, מופרדים בפסיקים (אופציונלי)",
+      "bcc": "נמעני BCC, מופרדים בפסיקים (אופציונלי)",
+      "isHtml": "האם הגוף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "replyToEmail": {
+    "actionTitle": "מענה להודעת דוא\"ל",
+    "description": "מענה להודעת דוא\"ל ספציפית",
+    "parameters": {
+      "emailId": "מזהה ההודעה למענה",
+      "body": "תוכן הודעת המענה",
+      "isHtml": "האם הגוף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "replyAllToEmail": {
+    "actionTitle": "מענה לכולם להודעת דוא\"ל",
+    "description": "מענה לכל הנמענים של הודעת דוא\"ל",
+    "parameters": {
+      "emailId": "מזהה ההודעה למענה",
+      "body": "תוכן הודעת המענה",
+      "isHtml": "האם הגוף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "forwardEmail": {
+    "actionTitle": "העברת דוא\"ל",
+    "description": "העבר הודעת דוא\"ל לנמענים אחרים",
+    "parameters": {
+      "emailId": "מזהה ההודעה להעברה",
+      "to": "כתובת(כתובות) דוא\"ל של הנמען, מופרדות בפסיקים עבור מספר נמענים",
+      "body": "הודעה נוספת אופציונלית לכלול עם הדוא\"ל המועבר",
+      "isHtml": "האם הגוף הנוסף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "createDraft": {
+    "actionTitle": "יצירת טיוטת דוא\"ל",
+    "description": "צור טיוטת דוא\"ל חדשה מבלי לשלוח אותה",
+    "parameters": {
+      "to": "כתובת(כתובות) דוא\"ל של הנמען, מופרדות בפסיקים עבור מספר נמענים",
+      "subject": "שורת נושא הדוא\"ל",
+      "body": "תוכן גוף הדוא\"ל (טקסט רגיל או HTML)",
+      "cc": "נמעני CC, מופרדים בפסיקים (אופציונלי)",
+      "bcc": "נמעני BCC, מופרדים בפסיקים (אופציונלי)",
+      "isHtml": "האם הגוף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "updateDraft": {
+    "actionTitle": "עדכון טיוטת דוא\"ל",
+    "description": "עדכן טיוטת דוא\"ל קיימת",
+    "parameters": {
+      "draftId": "מזהה הטיוטה לעדכון",
+      "to": "כתובת(כתובות) דוא\"ל של הנמען, מופרדות בפסיקים עבור מספר נמענים",
+      "subject": "שורת נושא הדוא\"ל",
+      "body": "תוכן גוף הדוא\"ל (טקסט רגיל או HTML)",
+      "cc": "נמעני CC, מופרדים בפסיקים (אופציונלי)",
+      "bcc": "נמעני BCC, מופרדים בפסיקים (אופציונלי)",
+      "isHtml": "האם הגוף מעוצב ב-HTML (ברירת מחדל: false)"
+    }
+  },
+  "sendDraft": {
+    "actionTitle": "שליחת טיוטת דוא\"ל",
+    "description": "שלח טיוטת דוא\"ל קיימת",
+    "parameters": {
+      "draftId": "מזהה הטיוטה לשליחה"
+    }
+  },
+  "deleteDraft": {
+    "actionTitle": "מחיקת טיוטת דוא\"ל",
+    "description": "מחק טיוטת דוא\"ל לצמיתות",
+    "parameters": {
+      "draftId": "מזהה הטיוטה למחיקה"
+    }
+  },
+  "listDrafts": {
+    "actionTitle": "רשימת טיוטות דוא\"ל",
+    "description": "אחזר רשימה של כל טיוטות הדוא\"ל",
+    "parameters": {
+      "limit": "מספר מקסימלי של טיוטות לאחזר"
+    }
+  },
+  "markAsRead": {
+    "actionTitle": "סימון הודעות כנקראו",
+    "description": "סמן הודעת דוא\"ל אחת או יותר כנקראה",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל לסימון כנקראו"
+    }
+  },
+  "markAsUnread": {
+    "actionTitle": "סימון הודעות כלא נקראו",
+    "description": "סמן הודעת דוא\"ל אחת או יותר כלא נקראה",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל לסימון כלא נקראו"
+    }
+  },
+  "archiveEmail": {
+    "actionTitle": "ארכיון הודעות",
+    "description": "ארכב הודעת דוא\"ל אחת או יותר (מסיר מהתיבה אך שומר ב-All Mail)",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל לארכוב"
+    }
+  },
+  "trashEmail": {
+    "actionTitle": "העברת הודעות לאשפה",
+    "description": "העבר הודעת דוא\"ל אחת או יותר לאשפה",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל להעברה לאשפה"
+    }
+  },
+  "deleteEmail": {
+    "actionTitle": "מחיקת הודעות לצמיתות",
+    "description": "מחק לצמיתות הודעת דוא\"ל אחת או יותר (לא ניתן לביטול)",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל למחיקה לצמיתות"
+    }
+  },
+  "starEmail": {
+    "actionTitle": "סימון/ביטול כוכב בהודעות",
+    "description": "הוסף או הסר כוכב מהודעת דוא\"ל אחת או יותר",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל לסימון/ביטול כוכב",
+      "star": "true להוספת כוכב, false להסרת כוכב"
+    }
+  },
+  "moveToFolder": {
+    "actionTitle": "העברת הודעות לתווית/תיקייה",
+    "description": "העבר הודעת דוא\"ל אחת או יותר לתווית Gmail ספציפית (תיקייה)",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל להעברה",
+      "labelId": "מזהה התווית להעברת ההודעות אליה"
+    }
+  },
+  "listLabels": {
+    "actionTitle": "רשימת תוויות Gmail",
+    "description": "אחזר את כל תוויות ה-Gmail (תיקיות) בחשבון",
+    "parameters": {}
+  },
+  "createLabel": {
+    "actionTitle": "יצירת תווית Gmail",
+    "description": "צור תווית Gmail חדשה (תיקייה)",
+    "parameters": {
+      "name": "שם התווית החדשה",
+      "labelListVisibility": "נראות ברשימת התוויות: 'labelShow', 'labelHide', או 'labelShowIfUnread' (אופציונלי)",
+      "messageListVisibility": "נראות ברשימת ההודעות: 'show' או 'hide' (אופציונלי)"
+    }
+  },
+  "deleteLabel": {
+    "actionTitle": "מחיקת תווית Gmail",
+    "description": "מחק לצמיתות תווית Gmail",
+    "parameters": {
+      "labelId": "מזהה התווית למחיקה"
+    }
+  },
+  "applyLabel": {
+    "actionTitle": "החלת תווית על הודעות",
+    "description": "החל תווית על הודעת דוא\"ל אחת או יותר",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל להחלת התווית עליהן",
+      "labelId": "מזהה התווית להחלה"
+    }
+  },
+  "removeLabel": {
+    "actionTitle": "הסרת תווית מהודעות",
+    "description": "הסר תווית מהודעת דוא\"ל אחת או יותר",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל להסרת התווית מהן",
+      "labelId": "מזהה התווית להסרה"
+    }
+  },
+  "updateLabel": {
+    "actionTitle": "עדכון תווית Gmail",
+    "description": "עדכן מאפיינים של תווית Gmail קיימת",
+    "parameters": {
+      "labelId": "מזהה התווית לעדכון",
+      "name": "שם חדש לתווית (אופציונלי)",
+      "labelListVisibility": "נראות חדשה ברשימת התוויות (אופציונלי)",
+      "messageListVisibility": "נראות חדשה ברשימת ההודעות (אופציונלי)"
+    }
+  },
+  "getEmailThread": {
+    "actionTitle": "קבלת שרשור דוא\"ל",
+    "description": "אחזר את כל ההודעות בשרשור שיחה",
+    "parameters": {
+      "threadId": "מזהה שרשור הדוא\"ל לאחזר"
+    }
+  },
+  "downloadAttachment": {
+    "actionTitle": "הורדת קובץ מצורף לדוא\"ל",
+    "description": "הורד קובץ מצורף מהודעת דוא\"ל",
+    "parameters": {
+      "emailId": "מזהה ההודעה המכילה את הקובץ המצורף",
+      "attachmentId": "מזהה הקובץ המצורף להורדה"
+    }
+  },
+  "batchModifyEmails": {
+    "actionTitle": "שינוי אצווה של הודעות",
+    "description": "החל שינויים מרובים על הודעות מרובות בבת אחת (הוסף/הסר תוויות, סמן כנקרא/לא נקרא וכו')",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל לשינוי",
+      "addLabelIds": "מערך מזהי תוויות להוספה (אופציונלי)",
+      "removeLabelIds": "מערך מזהי תוויות להסרה (אופציונלי)"
+    }
+  },
+  "batchDeleteEmails": {
+    "actionTitle": "מחיקת אצווה של הודעות",
+    "description": "מחק לצמיתות הודעות מרובות בבת אחת",
+    "parameters": {
+      "emailIds": "מערך מזהי הודעות דוא\"ל למחיקה לצמיתות"
+    }
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "serviceName": "Gmail Integration",
+  "getInbox": {
+    "actionTitle": "Get Gmail Inbox",
+    "description": "Retrieves recent emails from your Gmail inbox",
+    "parameters": {
+      "limit": "Maximum number of emails to retrieve"
+    }
+  },
+  "readEmail": {
+    "actionTitle": "Read Gmail Email",
+    "description": "Retrieves the full content and details of a specific email",
+    "parameters": {
+      "emailId": "The ID of the email to read"
+    }
+  },
+  "searchEmails": {
+    "actionTitle": "Search Gmail Emails",
+    "description": "Search emails using Gmail query syntax (e.g., 'from:user@example.com', 'subject:meeting', 'is:unread')",
+    "parameters": {
+      "searchQuery": "Gmail search query (supports full Gmail search syntax)",
+      "limit": "Maximum number of emails to return"
+    }
+  },
+  "sendEmail": {
+    "actionTitle": "Send Email",
+    "description": "Send a new email via Gmail with support for HTML content, CC, BCC, and multiple recipients",
+    "parameters": {
+      "to": "Recipient email address(es), comma-separated for multiple recipients",
+      "subject": "Email subject line",
+      "body": "Email body content (plain text or HTML)",
+      "cc": "CC recipients, comma-separated (optional)",
+      "bcc": "BCC recipients, comma-separated (optional)",
+      "isHtml": "Whether the body is HTML formatted (default: false)"
+    }
+  },
+  "replyToEmail": {
+    "actionTitle": "Reply to Email",
+    "description": "Reply to a specific email",
+    "parameters": {
+      "emailId": "The ID of the email to reply to",
+      "body": "Reply message content",
+      "isHtml": "Whether the body is HTML formatted (default: false)"
+    }
+  },
+  "replyAllToEmail": {
+    "actionTitle": "Reply All to Email",
+    "description": "Reply to all recipients of an email",
+    "parameters": {
+      "emailId": "The ID of the email to reply to",
+      "body": "Reply message content",
+      "isHtml": "Whether the body is HTML formatted (default: false)"
+    }
+  },
+  "forwardEmail": {
+    "actionTitle": "Forward Email",
+    "description": "Forward an email to other recipients",
+    "parameters": {
+      "emailId": "The ID of the email to forward",
+      "to": "Recipient email address(es), comma-separated for multiple recipients",
+      "body": "Optional additional message to include with the forwarded email",
+      "isHtml": "Whether the additional body is HTML formatted (default: false)"
+    }
+  },
+  "createDraft": {
+    "actionTitle": "Create Email Draft",
+    "description": "Create a new email draft without sending it",
+    "parameters": {
+      "to": "Recipient email address(es), comma-separated for multiple recipients",
+      "subject": "Email subject line",
+      "body": "Email body content (plain text or HTML)",
+      "cc": "CC recipients, comma-separated (optional)",
+      "bcc": "BCC recipients, comma-separated (optional)",
+      "isHtml": "Whether the body is HTML formatted (default: false)"
+    }
+  },
+  "updateDraft": {
+    "actionTitle": "Update Email Draft",
+    "description": "Update an existing email draft",
+    "parameters": {
+      "draftId": "The ID of the draft to update",
+      "to": "Recipient email address(es), comma-separated for multiple recipients",
+      "subject": "Email subject line",
+      "body": "Email body content (plain text or HTML)",
+      "cc": "CC recipients, comma-separated (optional)",
+      "bcc": "BCC recipients, comma-separated (optional)",
+      "isHtml": "Whether the body is HTML formatted (default: false)"
+    }
+  },
+  "sendDraft": {
+    "actionTitle": "Send Email Draft",
+    "description": "Send an existing email draft",
+    "parameters": {
+      "draftId": "The ID of the draft to send"
+    }
+  },
+  "deleteDraft": {
+    "actionTitle": "Delete Email Draft",
+    "description": "Permanently delete an email draft",
+    "parameters": {
+      "draftId": "The ID of the draft to delete"
+    }
+  },
+  "listDrafts": {
+    "actionTitle": "List Email Drafts",
+    "description": "Retrieve a list of all email drafts",
+    "parameters": {
+      "limit": "Maximum number of drafts to retrieve"
+    }
+  },
+  "markAsRead": {
+    "actionTitle": "Mark Emails as Read",
+    "description": "Mark one or more emails as read",
+    "parameters": {
+      "emailIds": "Array of email IDs to mark as read"
+    }
+  },
+  "markAsUnread": {
+    "actionTitle": "Mark Emails as Unread",
+    "description": "Mark one or more emails as unread",
+    "parameters": {
+      "emailIds": "Array of email IDs to mark as unread"
+    }
+  },
+  "archiveEmail": {
+    "actionTitle": "Archive Emails",
+    "description": "Archive one or more emails (removes from inbox but keeps in All Mail)",
+    "parameters": {
+      "emailIds": "Array of email IDs to archive"
+    }
+  },
+  "trashEmail": {
+    "actionTitle": "Move Emails to Trash",
+    "description": "Move one or more emails to trash",
+    "parameters": {
+      "emailIds": "Array of email IDs to move to trash"
+    }
+  },
+  "deleteEmail": {
+    "actionTitle": "Delete Emails Permanently",
+    "description": "Permanently delete one or more emails (cannot be undone)",
+    "parameters": {
+      "emailIds": "Array of email IDs to delete permanently"
+    }
+  },
+  "starEmail": {
+    "actionTitle": "Star/Unstar Emails",
+    "description": "Add or remove star from one or more emails",
+    "parameters": {
+      "emailIds": "Array of email IDs to star/unstar",
+      "star": "true to add star, false to remove star"
+    }
+  },
+  "moveToFolder": {
+    "actionTitle": "Move Emails to Label/Folder",
+    "description": "Move one or more emails to a specific Gmail label (folder)",
+    "parameters": {
+      "emailIds": "Array of email IDs to move",
+      "labelId": "The ID of the label to move emails to"
+    }
+  },
+  "listLabels": {
+    "actionTitle": "List Gmail Labels",
+    "description": "Retrieve all Gmail labels (folders) in the account",
+    "parameters": {}
+  },
+  "createLabel": {
+    "actionTitle": "Create Gmail Label",
+    "description": "Create a new Gmail label (folder)",
+    "parameters": {
+      "name": "Name of the new label",
+      "labelListVisibility": "Visibility in label list: 'labelShow', 'labelHide', or 'labelShowIfUnread' (optional)",
+      "messageListVisibility": "Visibility in message list: 'show' or 'hide' (optional)"
+    }
+  },
+  "deleteLabel": {
+    "actionTitle": "Delete Gmail Label",
+    "description": "Permanently delete a Gmail label",
+    "parameters": {
+      "labelId": "The ID of the label to delete"
+    }
+  },
+  "applyLabel": {
+    "actionTitle": "Apply Label to Emails",
+    "description": "Apply a label to one or more emails",
+    "parameters": {
+      "emailIds": "Array of email IDs to apply label to",
+      "labelId": "The ID of the label to apply"
+    }
+  },
+  "removeLabel": {
+    "actionTitle": "Remove Label from Emails",
+    "description": "Remove a label from one or more emails",
+    "parameters": {
+      "emailIds": "Array of email IDs to remove label from",
+      "labelId": "The ID of the label to remove"
+    }
+  },
+  "updateLabel": {
+    "actionTitle": "Update Gmail Label",
+    "description": "Update properties of an existing Gmail label",
+    "parameters": {
+      "labelId": "The ID of the label to update",
+      "name": "New name for the label (optional)",
+      "labelListVisibility": "New visibility in label list (optional)",
+      "messageListVisibility": "New visibility in message list (optional)"
+    }
+  },
+  "getEmailThread": {
+    "actionTitle": "Get Email Thread",
+    "description": "Retrieve all emails in a conversation thread",
+    "parameters": {
+      "threadId": "The ID of the email thread to retrieve"
+    }
+  },
+  "downloadAttachment": {
+    "actionTitle": "Download Email Attachment",
+    "description": "Download an attachment from an email",
+    "parameters": {
+      "emailId": "The ID of the email containing the attachment",
+      "attachmentId": "The ID of the attachment to download"
+    }
+  },
+  "batchModifyEmails": {
+    "actionTitle": "Batch Modify Emails",
+    "description": "Apply multiple modifications to multiple emails at once (add/remove labels, mark read/unread, etc.)",
+    "parameters": {
+      "emailIds": "Array of email IDs to modify",
+      "addLabelIds": "Array of label IDs to add (optional)",
+      "removeLabelIds": "Array of label IDs to remove (optional)"
+    }
+  },
+  "batchDeleteEmails": {
+    "actionTitle": "Batch Delete Emails",
+    "description": "Permanently delete multiple emails at once",
+    "parameters": {
+      "emailIds": "Array of email IDs to delete permanently"
+    }
+  }
+}

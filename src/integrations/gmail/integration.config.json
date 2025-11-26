@@ -1,0 +1,7 @@
+{
+  "name": "gmail",
+  "icon": "mail",
+  "apiKeyName": "google_client_id",
+  "actionCreator": "createGmailActions",
+  "actionsFile": "gmail.actions.ts"
+}
