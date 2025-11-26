@@ -1,0 +1,7 @@
+{
+  "name": "imap",
+  "icon": "inbox",
+  "apiKeyName": "imap_email",
+  "actionCreator": "createImapActions",
+  "actionsFile": "imap.actions.ts"
+}
