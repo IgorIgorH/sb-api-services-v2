@@ -44,8 +44,40 @@ The SB Agent Portal integrates with various third-party services. The following 
 11. Linear
 12. Code Indexer
 13. JIRA
+14. **Gmail** - Full Gmail API v1 integration for comprehensive email management
+15. **IMAP** - Generic IMAP support for non-Gmail email providers
 
 Each integration requires an API key, which can be managed through the Company settings. These integrations collectively enhance the capabilities of the AI agents, allowing them to perform a wide range of tasks across different domains and communication channels.
+
+### Gmail Integration
+
+The Gmail integration provides comprehensive email management capabilities through the Gmail API v1. It enables AI agents to:
+
+- **Read and Search**: Fetch inbox, read emails, search with advanced Gmail query syntax
+- **Send and Compose**: Send emails, reply, reply all, forward messages with HTML/plain text support
+- **Organize**: Manage labels, archive, trash, delete, star emails
+- **Drafts**: Create, update, send, and delete draft emails
+- **Threads**: Access complete email threads and conversations
+- **Attachments**: Download and handle email attachments
+- **Batch Operations**: Perform operations on multiple emails simultaneously
+
+The integration supports 32 different Gmail actions and includes full internationalization (English and Hebrew). To configure the Gmail integration, you need to set up OAuth 2.0 credentials in your Google Cloud Console and configure the following encrypted API keys in your Company settings:
+
+- `google_client_id`: OAuth 2.0 Client ID
+- `google_client_secret`: OAuth 2.0 Client Secret
+- `google_refresh_token`: OAuth 2.0 Refresh Token
+
+For detailed setup instructions, see the [Gmail Integration Guide](docs/gmail-integration-guide.md).
+
+### IMAP Integration
+
+The IMAP integration provides email access for generic email providers that support the IMAP protocol. This allows AI agents to work with email accounts from various providers (non-Gmail) including:
+
+- Fetch and read emails from IMAP servers
+- Support for SSL/TLS connections
+- Configurable for various email providers
+
+This integration is useful when Gmail API access is not available or when working with corporate email systems.
 
 ### Code Indexer Integration
 

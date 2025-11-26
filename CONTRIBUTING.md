@@ -104,6 +104,86 @@ npm run lint:fix
 - Keep functions small and focused
 - Use async/await instead of promises where possible
 
+## Security Best Practices
+
+### Never Commit Credentials or Secrets
+
+**Critical**: Never commit sensitive information to the repository:
+
+- ❌ **Do NOT** hardcode API keys, tokens, or passwords in code
+- ❌ **Do NOT** commit `.env` files
+- ❌ **Do NOT** commit setup scripts with hardcoded credentials
+- ❌ **Do NOT** commit OAuth tokens or refresh tokens
+- ❌ **Do NOT** commit company IDs or user identifiers
+
+**Instead**:
+
+- ✅ **Use environment variables** for all configuration
+- ✅ **Store credentials encrypted** in MongoDB using the encryption service
+- ✅ **Use `.gitignore`** to exclude sensitive files
+- ✅ **Review your changes** before committing to ensure no secrets are included
+- ✅ **Use placeholder values** in documentation and examples
+
+### Before Committing
+
+Always run these checks before committing code:
+
+```bash
+# Check for potential secrets
+git diff | grep -iE "(api_key|token|password|secret|client_id|client_secret)"
+
+# Review all changed files
+git status
+git diff
+
+# Ensure .gitignore is up to date
+cat .gitignore
+```
+
+### Handling API Keys
+
+All API keys and tokens must be:
+
+1. **Stored encrypted** in the database using `encryptData()` from `encryption.service.ts`
+2. **Retrieved securely** using `getDecryptedApiKey()` from `api.key.service.ts`
+3. **Never logged** to console or error messages in production
+4. **Scoped per company** to ensure multi-tenancy security
+
+Example:
+```typescript
+// ✅ Correct: Use encryption service
+import { encryptData } from './services/encryption.service';
+
+const encrypted = encryptData(apiKey);
+company.api_keys.push({
+  key: 'service_api_key',
+  value: encrypted.value,
+  iv: encrypted.iv,
+  tag: encrypted.tag
+});
+
+// ❌ Wrong: Hardcoded API key
+const API_KEY = 'sk-1234567890abcdef'; // Never do this!
+```
+
+### Setup Scripts
+
+If you need to create setup scripts for development or testing:
+
+1. **Add them to `.gitignore`** immediately
+2. **Use environment variables** for credentials
+3. **Document the process** without including actual credentials
+4. **Delete temporary scripts** before committing
+
+### Reviewing Pull Requests
+
+When reviewing PRs, check for:
+
+- No hardcoded credentials
+- Proper use of environment variables
+- Updated `.gitignore` if new secret patterns are introduced
+- No accidental commits of `.env` or token files
+
 ## Project Structure
 
 ```
