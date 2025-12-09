@@ -1,0 +1,7 @@
+{
+  "name": "nylas_remote",
+  "icon": "mail",
+  "apiKeyName": "nylas_microservice_url",
+  "actionCreator": "createNylasRemoteActions",
+  "actionsFile": "nylas-remote.actions.ts"
+}

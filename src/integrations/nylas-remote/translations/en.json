@@ -1,0 +1,134 @@
+{
+  "serviceName": "Nylas Remote (Microservice)",
+  "nylasRemoteGetEmails": {
+    "actionTitle": "Get Emails",
+    "description": "Retrieve emails from the connected email account via the Nylas microservice",
+    "parameters": {
+      "limit": "Maximum number of emails to return",
+      "unread": "Filter to only return unread emails"
+    }
+  },
+  "nylasRemoteGetEmail": {
+    "actionTitle": "Get Email by ID",
+    "description": "Retrieve a specific email by its ID, including the full body content",
+    "parameters": {
+      "messageId": "The ID of the email message to retrieve"
+    }
+  },
+  "nylasRemoteSendEmail": {
+    "actionTitle": "Send Email",
+    "description": "Send an email using the connected email account",
+    "parameters": {
+      "to": "Recipient email address(es)",
+      "subject": "The subject of the email",
+      "body": "The body content of the email",
+      "cc": "CC recipients",
+      "bcc": "BCC recipients"
+    }
+  },
+  "nylasRemoteListCalendars": {
+    "actionTitle": "List Calendars",
+    "description": "List all calendars from the connected account",
+    "parameters": {}
+  },
+  "nylasRemoteGetEvents": {
+    "actionTitle": "Get Calendar Events",
+    "description": "Retrieve calendar events from the connected account",
+    "parameters": {
+      "calendarId": "Calendar ID to query",
+      "start": "Start time as Unix timestamp",
+      "end": "End time as Unix timestamp",
+      "limit": "Maximum number of events to return"
+    }
+  },
+  "nylasRemoteCreateEvent": {
+    "actionTitle": "Create Calendar Event",
+    "description": "Create a new calendar event",
+    "parameters": {
+      "title": "The title of the event",
+      "description": "Description or notes for the event",
+      "startTime": "Start time of the event",
+      "endTime": "End time of the event",
+      "location": "Location of the event",
+      "participants": "Participant email addresses",
+      "calendarId": "Calendar ID to create event in"
+    }
+  },
+  "nylasRemoteUpdateEvent": {
+    "actionTitle": "Update Calendar Event",
+    "description": "Update an existing calendar event",
+    "parameters": {
+      "eventId": "The ID of the event to update",
+      "calendarId": "The calendar ID containing the event",
+      "title": "New title for the event",
+      "description": "New description",
+      "startTime": "New start time",
+      "endTime": "New end time",
+      "location": "New location"
+    }
+  },
+  "nylasRemoteDeleteEvent": {
+    "actionTitle": "Delete Calendar Event",
+    "description": "Delete a calendar event",
+    "parameters": {
+      "eventId": "The ID of the event to delete",
+      "calendarId": "The calendar ID containing the event"
+    }
+  },
+  "nylasRemoteCheckAvailability": {
+    "actionTitle": "Check Availability",
+    "description": "Check availability for participants to find open time slots",
+    "parameters": {
+      "emails": "Participant email addresses",
+      "startTime": "Start time range",
+      "endTime": "End time range",
+      "durationMinutes": "Desired meeting duration in minutes"
+    }
+  },
+  "nylasRemoteGetContacts": {
+    "actionTitle": "Get Contacts",
+    "description": "Retrieve contacts from the connected account",
+    "parameters": {
+      "limit": "Maximum number of contacts to return",
+      "email": "Filter contacts by email address"
+    }
+  },
+  "nylasRemoteCreateContact": {
+    "actionTitle": "Create Contact",
+    "description": "Create a new contact",
+    "parameters": {
+      "givenName": "First name of the contact",
+      "surname": "Last name of the contact",
+      "email": "Email address of the contact",
+      "phone": "Phone number",
+      "companyName": "Company name",
+      "jobTitle": "Job title",
+      "notes": "Notes about the contact"
+    }
+  },
+  "nylasRemoteUpdateContact": {
+    "actionTitle": "Update Contact",
+    "description": "Update an existing contact",
+    "parameters": {
+      "contactId": "The ID of the contact to update",
+      "givenName": "New first name",
+      "surname": "New last name",
+      "email": "New email address",
+      "phone": "New phone number",
+      "companyName": "New company name",
+      "notes": "New notes"
+    }
+  },
+  "nylasRemoteDeleteContact": {
+    "actionTitle": "Delete Contact",
+    "description": "Delete a contact",
+    "parameters": {
+      "contactId": "The ID of the contact to delete"
+    }
+  },
+  "nylasRemoteStatus": {
+    "actionTitle": "Check Microservice Status",
+    "description": "Check the status of the Nylas microservice and its configuration",
+    "parameters": {}
+  }
+}

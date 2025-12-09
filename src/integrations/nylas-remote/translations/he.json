@@ -1,0 +1,134 @@
+{
+  "serviceName": "Nylas מרוחק (מיקרו-שירות)",
+  "nylasRemoteGetEmails": {
+    "actionTitle": "קבלת מיילים",
+    "description": "אחזור מיילים מחשבון הדוא\"ל המחובר דרך שירות Nylas",
+    "parameters": {
+      "limit": "מספר מקסימלי של מיילים להחזיר",
+      "unread": "סנן להחזיר רק מיילים שלא נקראו"
+    }
+  },
+  "nylasRemoteGetEmail": {
+    "actionTitle": "קבלת מייל לפי מזהה",
+    "description": "אחזור מייל ספציפי לפי המזהה שלו, כולל תוכן מלא",
+    "parameters": {
+      "messageId": "מזהה הודעת המייל לאחזור"
+    }
+  },
+  "nylasRemoteSendEmail": {
+    "actionTitle": "שליחת מייל",
+    "description": "שליחת מייל באמצעות חשבון הדוא\"ל המחובר",
+    "parameters": {
+      "to": "כתובת/ות מייל של הנמען",
+      "subject": "נושא המייל",
+      "body": "תוכן גוף המייל",
+      "cc": "נמענים בהעתק",
+      "bcc": "נמענים בהעתק נסתר"
+    }
+  },
+  "nylasRemoteListCalendars": {
+    "actionTitle": "רשימת יומנים",
+    "description": "הצגת כל היומנים מהחשבון המחובר",
+    "parameters": {}
+  },
+  "nylasRemoteGetEvents": {
+    "actionTitle": "קבלת אירועי יומן",
+    "description": "אחזור אירועי יומן מהחשבון המחובר",
+    "parameters": {
+      "calendarId": "מזהה יומן לשאילתה",
+      "start": "זמן התחלה כחותמת זמן יוניקס",
+      "end": "זמן סיום כחותמת זמן יוניקס",
+      "limit": "מספר מקסימלי של אירועים להחזיר"
+    }
+  },
+  "nylasRemoteCreateEvent": {
+    "actionTitle": "יצירת אירוע יומן",
+    "description": "יצירת אירוע יומן חדש",
+    "parameters": {
+      "title": "כותרת האירוע",
+      "description": "תיאור או הערות לאירוע",
+      "startTime": "זמן התחלת האירוע",
+      "endTime": "זמן סיום האירוע",
+      "location": "מיקום האירוע",
+      "participants": "כתובות מייל של משתתפים",
+      "calendarId": "מזהה יומן ליצירת האירוע"
+    }
+  },
+  "nylasRemoteUpdateEvent": {
+    "actionTitle": "עדכון אירוע יומן",
+    "description": "עדכון אירוע יומן קיים",
+    "parameters": {
+      "eventId": "מזהה האירוע לעדכון",
+      "calendarId": "מזהה היומן המכיל את האירוע",
+      "title": "כותרת חדשה לאירוע",
+      "description": "תיאור חדש",
+      "startTime": "זמן התחלה חדש",
+      "endTime": "זמן סיום חדש",
+      "location": "מיקום חדש"
+    }
+  },
+  "nylasRemoteDeleteEvent": {
+    "actionTitle": "מחיקת אירוע יומן",
+    "description": "מחיקת אירוע יומן",
+    "parameters": {
+      "eventId": "מזהה האירוע למחיקה",
+      "calendarId": "מזהה היומן המכיל את האירוע"
+    }
+  },
+  "nylasRemoteCheckAvailability": {
+    "actionTitle": "בדיקת זמינות",
+    "description": "בדיקת זמינות למשתתפים למציאת חלונות זמן פנויים",
+    "parameters": {
+      "emails": "כתובות מייל של משתתפים",
+      "startTime": "טווח זמן התחלה",
+      "endTime": "טווח זמן סיום",
+      "durationMinutes": "משך הפגישה הרצוי בדקות"
+    }
+  },
+  "nylasRemoteGetContacts": {
+    "actionTitle": "קבלת אנשי קשר",
+    "description": "אחזור אנשי קשר מהחשבון המחובר",
+    "parameters": {
+      "limit": "מספר מקסימלי של אנשי קשר להחזיר",
+      "email": "סינון אנשי קשר לפי כתובת מייל"
+    }
+  },
+  "nylasRemoteCreateContact": {
+    "actionTitle": "יצירת איש קשר",
+    "description": "יצירת איש קשר חדש",
+    "parameters": {
+      "givenName": "שם פרטי של איש הקשר",
+      "surname": "שם משפחה של איש הקשר",
+      "email": "כתובת מייל של איש הקשר",
+      "phone": "מספר טלפון",
+      "companyName": "שם חברה",
+      "jobTitle": "תפקיד",
+      "notes": "הערות על איש הקשר"
+    }
+  },
+  "nylasRemoteUpdateContact": {
+    "actionTitle": "עדכון איש קשר",
+    "description": "עדכון איש קשר קיים",
+    "parameters": {
+      "contactId": "מזהה איש הקשר לעדכון",
+      "givenName": "שם פרטי חדש",
+      "surname": "שם משפחה חדש",
+      "email": "כתובת מייל חדשה",
+      "phone": "מספר טלפון חדש",
+      "companyName": "שם חברה חדש",
+      "notes": "הערות חדשות"
+    }
+  },
+  "nylasRemoteDeleteContact": {
+    "actionTitle": "מחיקת איש קשר",
+    "description": "מחיקת איש קשר",
+    "parameters": {
+      "contactId": "מזהה איש הקשר למחיקה"
+    }
+  },
+  "nylasRemoteStatus": {
+    "actionTitle": "בדיקת סטטוס מיקרו-שירות",
+    "description": "בדיקת סטטוס שירות Nylas והתצורה שלו",
+    "parameters": {}
+  }
+}

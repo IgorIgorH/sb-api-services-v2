@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { Invite, IInvite, InviteStatus, InviteSource } from '../models/Invite';
 import { User } from '../models/User';
 import { Company } from '../models/Company';
+import { InvitationEmailService } from './invitation-email.service';
 
 export class InviteService {
   /**
@@ -13,6 +14,7 @@ export class InviteService {
    * @param name - Optional name for the invitee
    * @param role - Optional role to assign (default: CompanyUser)
    * @param metadata - Optional metadata (IP, user agent, source)
+   * @param sendEmail - Whether to send invitation email (default: true)
    */
   static async createInvite(
     email: string,
@@ -25,6 +27,7 @@ export class InviteService {
       userAgent?: string;
       source?: InviteSource;
     },
+    sendEmail: boolean = true,
   ): Promise<IInvite> {
     // 1. Validate email format
     if (!validator.isEmail(email)) {
@@ -90,6 +93,23 @@ export class InviteService {
         source: metadata?.source || InviteSource.DASHBOARD,
       },
     });
+
+    // Send invitation email via Nylas
+    if (sendEmail) {
+      try {
+        await InvitationEmailService.sendInvitationEmail({
+          companyId,
+          invite,
+          companyName: company.name,
+          inviterName: inviter.name,
+        });
+        console.log(`[InviteService] Sent invitation email to ${normalizedEmail}`);
+      } catch (emailError: any) {
+        // Log the error but don't fail the invite creation
+        console.error(`[InviteService] Failed to send invitation email: ${emailError.message}`);
+        // The invite is still created, email can be resent later
+      }
+    }
 
     return invite;
   }
@@ -238,6 +258,67 @@ export class InviteService {
     await Invite.findByIdAndDelete(inviteId);
 
     return true;
+  }
+
+  /**
+   * Resend invitation email for a pending invite
+   */
+  static async resendInviteEmail(
+    inviteId: string,
+    companyId: string,
+    resenderId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    const invite = await Invite.findById(inviteId);
+
+    if (!invite) {
+      throw new Error('Invite not found');
+    }
+
+    // Verify invite belongs to the company
+    if (invite.companyId.toString() !== companyId) {
+      throw new Error('Not authorized to resend this invite');
+    }
+
+    // Can only resend pending, non-expired invites
+    if (invite.status !== InviteStatus.PENDING) {
+      throw new Error(`Cannot resend invite with status: ${invite.status}`);
+    }
+
+    if (invite.expiresAt < new Date()) {
+      throw new Error('Invite has expired');
+    }
+
+    // Check resend limit (max 3)
+    if (invite.resendCount >= 3) {
+      throw new Error('Maximum resend limit reached (3)');
+    }
+
+    // Get company and resender info
+    const [company, resender] = await Promise.all([
+      Company.findById(companyId),
+      User.findById(resenderId),
+    ]);
+
+    if (!company || !resender) {
+      throw new Error('Company or resender not found');
+    }
+
+    // Send the email
+    const result = await InvitationEmailService.resendInvitationEmail({
+      companyId,
+      invite,
+      companyName: company.name,
+      inviterName: resender.name,
+    });
+
+    if (result.success) {
+      // Update resend count and timestamp
+      invite.resendCount = (invite.resendCount || 0) + 1;
+      invite.lastResendAt = new Date();
+      await invite.save();
+    }
+
+    return result;
   }
 
   /**

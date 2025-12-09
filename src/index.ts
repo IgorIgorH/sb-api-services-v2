@@ -83,6 +83,7 @@ import mcpRouter from './routes/mcp.routes';
 import oauthMcpRouter from './routes/oauth-mcp.routes';
 import uiStateRouter from './routes/ui-state.routes';
 import { inviteRouter } from './routes/invite.routes';
+import nylasAuthRouter from './routes/nylas-auth.routes';
 
 // Read package.json at startup
 let packageJson: { version: string; name: string };
@@ -184,6 +185,8 @@ app.use(
 ); // Unified Workspace (before generic /api)
 app.use('/api/ui-state', verifyTokenMiddleware, verifyAccess(), uiStateRouter); // UI State tracking (before generic /api)
 app.use('/api/invites', verifyTokenMiddleware, verifyAccess(), inviteRouter); // User invite system
+app.use('/api/nylas-auth', nylasAuthRouter); // Nylas auth (mixed auth - some routes public, some protected)
+app.use('/webhooks', nylasAuthRouter); // Webhook callbacks from V3 microservice (public)
 // MCP Server - custom auth that allows initialize, tools/list, and notifications without auth
 app.use(
   '/api/mcp',
