@@ -1,6 +1,7 @@
 import { IAssistant } from '../../models/Assistant';
 import { processTemplate } from '../template.service';
 import { SupportedLanguage } from '../discovery.service';
+import { getCurrentDateTime } from '../time.service';
 import { createFunctionFactory } from '../../integrations/actions/loaders';
 import { executeFunctionCall } from '../../integrations/actions/executors';
 import { FunctionCall } from '../../integrations/actions/types';
@@ -572,8 +573,12 @@ export const executeAssistantStateless = async (
   // For stateless execution, we'll use the prompt directly without template processing
   // or provide basic context if needed
   // Use promptOverride if provided, otherwise use the assistant's default prompt
-  const systemPrompt =
+  const basePrompt =
     promptOverride || assistant.llmPrompt || 'You are a helpful assistant.';
+
+  // Prepend current date/time so AI knows the actual current date
+  const currentDateTime = await getCurrentDateTime();
+  const systemPrompt = `Current date and time: ${currentDateTime}\n\n${basePrompt}`;
 
   const userMessageForLlm: ModelMessage = {
     role: 'user',

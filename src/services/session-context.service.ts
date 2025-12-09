@@ -2,6 +2,7 @@ import { Session } from '../models/Session';
 import { User } from '../models/User';
 import { Company } from '../models/Company';
 import { Assistant } from '../models/Assistant';
+import { getTimeInfo } from './time.service';
 
 export interface SessionContextData {
   user: {
@@ -17,6 +18,10 @@ export interface SessionContextData {
     name: string;
     // Add other assistant properties as needed
   };
+  // Current date/time information
+  currentDateTime: string;
+  unixTimestamp: number;
+  today: string; // YYYY-MM-DD format
 }
 
 export const getSessionContextData = async (
@@ -42,6 +47,9 @@ export const getSessionContextData = async (
     throw new Error('Assistant not found');
   }
 
+  // Get current date/time from external service
+  const timeInfo = await getTimeInfo();
+
   return {
     user: {
       name: user.name,
@@ -56,5 +64,9 @@ export const getSessionContextData = async (
       name: assistant.name,
       // Add other assistant properties as needed
     },
+    // Current date/time for AI awareness
+    currentDateTime: timeInfo.formatted,
+    unixTimestamp: timeInfo.unixTimestamp,
+    today: timeInfo.date,
   };
 };
